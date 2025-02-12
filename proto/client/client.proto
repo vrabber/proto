@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package client;
+
+option go_package = "github.com/bonefabric/vrabber-protobuf";
+
+message StartDownloadRequest {
+  string url = 1;
+  string request_id = 2;
+}
+
+message DownloadStatusResponse {
+  uint32 request_id = 1;
+  DownloadStatus status = 2;
+  string message = 3;
+}
+
+enum DownloadStatus {
+  UNKNOWN = 0;
+  ACCEPTED = 1;
+  DOWNLOADING = 2;
+  DONE = 3;
+  FAILED = 4;
+}
+
+service DownloadService {
+  rpc DownloadVideo(stream StartDownloadRequest) returns (stream DownloadStatusResponse);
+}
