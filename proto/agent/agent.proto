@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package client;
+
+option go_package = "github.com/bonefabric/vrabber-protobuf";
+
+message LoadFileRequest {
+  string name = 1;
+  bytes data = 2;
+}
+
+message LoadFileResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+service LoadFileService {
+  rpc LoadFile(stream LoadFileRequest) returns (LoadFileResponse);
+}
