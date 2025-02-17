@@ -1,3 +1,3 @@
-module github.com/bonefabric/vrabber-protobuf
+module github.com/vrabber/proto
 
 go 1.23
