@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package storage;
+
+option go_package = "./";
+
+service StorageService {
+  rpc Upload(UploadRequest) returns (UploadResponse);
+  rpc Download(DownloadRequest) returns (DownloadResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc FileInfo(FileInfoRequest) returns (FileInfoResponse);
+}
+
+message UploadRequest {
+  FileMetadata metadata = 1;
+  bytes content = 2;
+}
+
+message FileMetadata {
+  string filename = 1;
+  string checksum = 2;
+}
+
+enum UploadStatus {
+  UPLOAD_STATUS_UNSPECIFIED = 0;
+  UPLOAD_STATUS_SUCCESS = 1;
+  UPLOAD_STATUS_ERROR = 2;
+}
+
+message UploadResponse {
+  string file_id = 1;
+  UploadStatus status = 2;
+}
+
+message DownloadRequest {
+  string file_id = 1;
+}
+
+message DownloadResponse {
+  bytes content = 1;
+  string checksum = 2;
+  bool exists = 3;
+}
+
+message DeleteRequest {
+  string file_id = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message FileInfoRequest {
+  string file_id = 1;
+}
+
+message FileInfoResponse {
+  FileMetadata metadata = 1;
+  bool success = 2;
+  string error = 3;
+}
