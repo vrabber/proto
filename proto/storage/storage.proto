@@ -5,45 +5,89 @@ package storage;
 option go_package = "./";
 
 service StorageService {
-  rpc Upload(UploadRequest) returns (UploadResponse);
-  rpc Download(DownloadRequest) returns (DownloadResponse);
+  rpc InitUpload(InitUploadRequest) returns (InitUploadResponse);
+  rpc Upload(stream UploadRequest) returns (UploadResponse);
+  rpc InitDownload(InitDownloadRequest) returns (InitDownloadResponse);
+  rpc Download(DownloadRequest) returns (stream DownloadResponse);
   rpc Delete(DeleteRequest) returns (DeleteResponse);
   rpc FileInfo(FileInfoRequest) returns (FileInfoResponse);
 }
 
-message UploadRequest {
-  FileMetadata metadata = 1;
-  bytes content = 2;
+message FileMetadata {
+  string owner = 1;
+  uint64 created_at = 2;
+  uint64 updated_at = 3;
 }
 
-message FileMetadata {
+message InitUploadRequest {
   string filename = 1;
-  string checksum = 2;
+  uint64 size = 2;
+  FileMetadata metadata = 3;
+}
+
+message InitUploadResponse {
+  string upload_id = 1;
+  InitUploadStatus status = 2;
+}
+
+enum InitUploadStatus {
+  INIT_UPLOAD_STATUS_UNSPECIFIED = 0;
+  INIT_UPLOAD_STATUS_READY = 1;
+  INIT_UPLOAD_STATUS_ERROR_FILE_EXISTS = 2;
+  INIT_UPLOAD_STATUS_ANOTHER_ERROR = 3;
+}
+
+message UploadRequest {
+  string upload_id = 1;
+  uint64 offset = 2;
+  bytes content = 3;
+}
+
+message UploadResponse {
+  UploadStatus status = 2;
+  string checksum = 3;
 }
 
 enum UploadStatus {
   UPLOAD_STATUS_UNSPECIFIED = 0;
   UPLOAD_STATUS_SUCCESS = 1;
-  UPLOAD_STATUS_ERROR = 2;
+  UPLOAD_STATUS_ERROR_INVALID_UPLOAD_ID = 2;
+  UPLOAD_STATUS_ERROR_UPLOAD_TIMEOUT = 3;
+  UPLOAD_STATUS_ERROR_INVALID_OFFSET = 4;
+  UPLOAD_STATUS_ANOTHER_ERROR = 5;
 }
 
-message UploadResponse {
-  string file_id = 1;
-  UploadStatus status = 2;
+message InitDownloadRequest {
+  string filename = 1;
+  uint64 chunk_size = 2;
+}
+
+message InitDownloadResponse {
+  InitDownloadStatus status = 1;
+  string download_id = 2;
+  uint64 size = 3;
+  string checksum = 4;
+  FileMetadata metadata = 5;
+}
+
+enum InitDownloadStatus {
+  INIT_DOWNLOAD_STATUS_UNSPECIFIED = 0;
+  INIT_DOWNLOAD_STATUS_READY = 1;
+  INIT_DOWNLOAD_STATUS_ERROR_FILE_NOT_FOUND = 2;
+  INIT_DOWNLOAD_STATUS_ANOTHER_ERROR = 3;
 }
 
 message DownloadRequest {
-  string file_id = 1;
+  string download_id = 1;
 }
 
 message DownloadResponse {
-  bytes content = 1;
-  string checksum = 2;
-  bool exists = 3;
+  uint64 offset = 1;
+  bytes content = 2;
 }
 
 message DeleteRequest {
-  string file_id = 1;
+  string filename = 1;
 }
 
 message DeleteResponse {
@@ -52,11 +96,19 @@ message DeleteResponse {
 }
 
 message FileInfoRequest {
-  string file_id = 1;
+  string filename = 1;
 }
 
 message FileInfoResponse {
-  FileMetadata metadata = 1;
-  bool success = 2;
-  string error = 3;
+  FileInfoStatus status = 1;
+  FileMetadata metadata = 2;
+  string checksum = 3;
+  uint64 size = 4;
+}
+
+enum FileInfoStatus {
+  FILE_INFO_STATUS_UNSPECIFIED = 0;
+  FILE_INFO_STATUS_SUCCESS = 1;
+  FILE_INFO_STATUS_ERROR_FILE_NOT_FOUND = 2;
+  FILE_INFO_STATUS_ANOTHER_ERROR = 3;
 }
