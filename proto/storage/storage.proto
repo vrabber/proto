@@ -26,14 +26,7 @@ message CreateRequest {
 }
 
 message CreateResponse {
-  enum CreateResponseStatus {
-    CREATE_RESPONSE_STATUS_UNSPECIFIED = 0;
-    CREATE_RESPONSE_STATUS_SUCCESS = 1;
-    CREATE_RESPONSE_STATUS_ERROR = 2;
-    CREATE_RESPONSE_STATUS_EXISTS = 3;
-  }
-  CreateResponseStatus status = 1;
-  string error = 2;
+  string error = 1;
 }
 
 message WriteRequest {
@@ -42,15 +35,8 @@ message WriteRequest {
 }
 
 message WriteResponse {
-  enum WriteResponseStatus {
-    WRITE_RESPONSE_STATUS_UNSPECIFIED = 0;
-    WRITE_RESPONSE_STATUS_SUCCESS = 1;
-    WRITE_RESPONSE_STATUS_ERROR = 2;
-    WRITE_RESPONSE_STATUS_NOT_FOUND = 3;
-  }
-  WriteResponseStatus status = 1;
+  uint64 bytes_written = 1;
   string error = 2;
-  uint64 bytes_written = 3;
 }
 
 message ReadRequest {
@@ -58,16 +44,9 @@ message ReadRequest {
 }
 
 message ReadResponse {
-  enum ReadResponseStatus {
-    READ_RESPONSE_STATUS_UNSPECIFIED = 0;
-    READ_RESPONSE_STATUS_SUCCESS = 1;
-    READ_RESPONSE_STATUS_ERROR = 2;
-    READ_RESPONSE_STATUS_NOT_FOUND = 3;
-  }
-  ReadResponseStatus status = 1;
-  string error = 2;
-  bytes data = 3;
-  uint64 bytes_read = 4;
+  bytes data = 1;
+  uint64 bytes_read = 2;
+  string error = 3;
 }
 
 message InfoRequest {
@@ -75,16 +54,9 @@ message InfoRequest {
 }
 
 message InfoResponse {
-  enum InfoResponseStatus {
-    INFO_RESPONSE_STATUS_UNSPECIFIED = 0;
-    INFO_RESPONSE_STATUS_SUCCESS = 1;
-    INFO_RESPONSE_STATUS_ERROR = 2;
-    INFO_RESPONSE_STATUS_NOT_FOUND = 3;
-  }
-  InfoResponseStatus status = 1;
-  string error = 2;
-  uint64 size = 3;
-  FileMetadata metadata = 4;
+  FileMetadata metadata = 1;
+  uint64 size = 2;
+  string error = 3;
 }
 
 message DeleteRequest {
@@ -92,12 +64,5 @@ message DeleteRequest {
 }
 
 message DeleteResponse {
-  enum DeleteResponseStatus {
-    DELETE_RESPONSE_STATUS_UNSPECIFIED = 0;
-    DELETE_RESPONSE_STATUS_SUCCESS = 1;
-    DELETE_RESPONSE_STATUS_ERROR = 2;
-    DELETE_RESPONSE_STATUS_NOT_FOUND = 3;
-  }
-  DeleteResponseStatus status = 1;
-  string error = 2;
+  string error = 1;
 }
