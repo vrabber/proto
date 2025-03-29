@@ -30,6 +30,7 @@ message CreateResponse {
     CREATE_RESPONSE_STATUS_UNSPECIFIED = 0;
     CREATE_RESPONSE_STATUS_SUCCESS = 1;
     CREATE_RESPONSE_STATUS_ERROR = 2;
+    CREATE_RESPONSE_STATUS_EXISTS = 3;
   }
   CreateResponseStatus status = 1;
   string error = 2;
@@ -45,6 +46,7 @@ message WriteResponse {
     WRITE_RESPONSE_STATUS_UNSPECIFIED = 0;
     WRITE_RESPONSE_STATUS_SUCCESS = 1;
     WRITE_RESPONSE_STATUS_ERROR = 2;
+    WRITE_RESPONSE_STATUS_NOT_FOUND = 3;
   }
   WriteResponseStatus status = 1;
   string error = 2;
@@ -60,6 +62,7 @@ message ReadResponse {
     READ_RESPONSE_STATUS_UNSPECIFIED = 0;
     READ_RESPONSE_STATUS_SUCCESS = 1;
     READ_RESPONSE_STATUS_ERROR = 2;
+    READ_RESPONSE_STATUS_NOT_FOUND = 3;
   }
   ReadResponseStatus status = 1;
   string error = 2;
