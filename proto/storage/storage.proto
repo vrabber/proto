@@ -36,7 +36,6 @@ message WriteRequest {
 
 message WriteResponse {
   uint64 bytes_written = 1;
-  string error = 2;
 }
 
 message ReadRequest {
