@@ -44,7 +44,6 @@ message ReadRequest {
 
 message ReadResponse {
   bytes data = 1;
-  uint64 bytes_read = 2;
 }
 
 message InfoRequest {
