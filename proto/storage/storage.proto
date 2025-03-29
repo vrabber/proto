@@ -7,19 +7,11 @@ import "google/protobuf/timestamp.proto";
 option go_package = "./";
 
 service StorageService {
-  rpc InitUpload(InitUploadRequest) returns (InitUploadResponse);
-  rpc Upload(stream UploadRequest) returns (UploadResponse);
-  rpc InitDownload(InitDownloadRequest) returns (InitDownloadResponse);
-  rpc Download(DownloadRequest) returns (stream DownloadResponse);
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Write(stream WriteRequest) returns (WriteResponse);
+  rpc Read(ReadRequest) returns (stream ReadResponse);
+  rpc Info(InfoRequest) returns (InfoResponse);
   rpc Delete(DeleteRequest) returns (DeleteResponse);
-  rpc FileInfo(FileInfoRequest) returns (FileInfoResponse);
-}
-
-message FileInfo {
-  string filename = 1;
-  uint64 size = 2;
-  string hash = 3;
-  FileMetadata metadata = 4;
 }
 
 message FileMetadata {
@@ -28,112 +20,82 @@ message FileMetadata {
   google.protobuf.Timestamp updated_at = 3;
 }
 
-// InitUpload
-message InitUploadRequest {
-  FileInfo info = 1;
+message CreateRequest {
+  string name = 1;
+  FileMetadata metadata = 2;
 }
 
-message InitUploadResponse {
-  InitUploadStatus status = 1;
-  oneof result {
-    string upload_id = 2;
-    string error = 3;
+message CreateResponse {
+  enum CreateResponseStatus {
+    UNSPECIFIED = 0;
+    SUCCESS = 1;
+    ERROR = 2;
   }
-}
-
-enum InitUploadStatus {
-  INIT_UPLOAD_STATUS_UNSPECIFIED = 0;
-  INIT_UPLOAD_STATUS_READY = 1;
-  INIT_UPLOAD_STATUS_ERROR_FILE_EXISTS = 2;
-  INIT_UPLOAD_STATUS_ANOTHER_ERROR = 3;
-}
-
-// Upload
-message UploadRequest {
-  string upload_id = 1;
-  uint64 offset = 2;
-  bytes content = 3;
-}
-
-message UploadResponse {
-  UploadStatus status = 1;
+  CreateResponseStatus status = 1;
   string error = 2;
 }
 
-enum UploadStatus {
-  UPLOAD_STATUS_UNSPECIFIED = 0;
-  UPLOAD_STATUS_SUCCESS = 1;
-  UPLOAD_STATUS_ERROR_INVALID_UPLOAD_ID = 2;
-  UPLOAD_STATUS_ERROR_UPLOAD_TIMEOUT = 3;
-  UPLOAD_STATUS_ERROR_INVALID_OFFSET = 4;
-  UPLOAD_STATUS_ANOTHER_ERROR = 5;
+message WriteRequest {
+  string name = 1;
+  bytes data = 2;
 }
 
-// InitDownload
-message InitDownloadRequest {
-  string filename = 1;
-  uint64 chunk_size = 2;
-}
-
-message InitDownloadResponse {
-  InitDownloadStatus status = 1;
-  oneof result {
-    string download_id = 2;
-    string error = 3;
+message WriteResponse {
+  enum WriteResponseStatus {
+    UNSPECIFIED = 0;
+    SUCCESS = 1;
+    ERROR = 2;
   }
-  FileInfo info = 4;
+  WriteResponseStatus status = 1;
+  string error = 2;
+  uint64 bytes_written = 3;
 }
 
-enum InitDownloadStatus {
-  INIT_DOWNLOAD_STATUS_UNSPECIFIED = 0;
-  INIT_DOWNLOAD_STATUS_READY = 1;
-  INIT_DOWNLOAD_STATUS_ERROR_FILE_NOT_FOUND = 2;
-  INIT_DOWNLOAD_STATUS_ANOTHER_ERROR = 3;
+message ReadRequest {
+  string name = 1;
 }
 
-// Download
-message DownloadRequest {
-  string download_id = 1;
+message ReadResponse {
+  enum ReadResponseStatus {
+    UNSPECIFIED = 0;
+    SUCCESS = 1;
+    ERROR = 2;
+    EOF = 3;
+  }
+  ReadResponseStatus status = 1;
+  string error = 2;
+  bytes data = 3;
+  uint64 bytes_read = 4;
 }
 
-message DownloadResponse {
-  uint64 offset = 1;
-  bytes content = 2;
+message InfoRequest {
+  string name = 1;
 }
 
-// Delete
+message InfoResponse {
+  enum InfoResponseStatus {
+    UNSPECIFIED = 0;
+    SUCCESS = 1;
+    ERROR = 2;
+    NOT_FOUND = 3;
+  }
+  InfoResponseStatus status = 1;
+  string error = 2;
+  uint64 size = 3;
+  FileMetadata metadata = 4;
+}
+
 message DeleteRequest {
-  string filename = 1;
+  string name = 1;
 }
 
 message DeleteResponse {
+  enum DeleteResponseStatus {
+    UNSPECIFIED = 0;
+    SUCCESS = 1;
+    ERROR = 2;
+    NOT_FOUND = 3;
+  }
   DeleteResponseStatus status = 1;
   string error = 2;
-}
-
-enum DeleteResponseStatus {
-  DELETE_RESPONSE_STATUS_UNSPECIFIED = 0;
-  DELETE_RESPONSE_STATUS_SUCCESS = 1;
-  DELETE_RESPONSE_STATUS_ERROR_FILE_NOT_FOUND = 2;
-  DELETE_RESPONSE_STATUS_ANOTHER_ERROR = 3;
-}
-
-// FileInfo
-message FileInfoRequest {
-  string filename = 1;
-}
-
-message FileInfoResponse {
-  FileInfoStatus status = 1;
-  oneof result {
-    FileInfo info = 2;
-    string error = 3;
-  }
-}
-
-enum FileInfoStatus {
-  FILE_INFO_STATUS_UNSPECIFIED = 0;
-  FILE_INFO_STATUS_SUCCESS = 1;
-  FILE_INFO_STATUS_ERROR_FILE_NOT_FOUND = 2;
-  FILE_INFO_STATUS_ANOTHER_ERROR = 3;
 }
