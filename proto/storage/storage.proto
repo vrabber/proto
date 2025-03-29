@@ -27,9 +27,9 @@ message CreateRequest {
 
 message CreateResponse {
   enum CreateResponseStatus {
-    UNSPECIFIED = 0;
-    SUCCESS = 1;
-    ERROR = 2;
+    CREATE_RESPONSE_STATUS_UNSPECIFIED = 0;
+    CREATE_RESPONSE_STATUS_SUCCESS = 1;
+    CREATE_RESPONSE_STATUS_ERROR = 2;
   }
   CreateResponseStatus status = 1;
   string error = 2;
@@ -42,9 +42,9 @@ message WriteRequest {
 
 message WriteResponse {
   enum WriteResponseStatus {
-    UNSPECIFIED = 0;
-    SUCCESS = 1;
-    ERROR = 2;
+    WRITE_RESPONSE_STATUS_UNSPECIFIED = 0;
+    WRITE_RESPONSE_STATUS_SUCCESS = 1;
+    WRITE_RESPONSE_STATUS_ERROR = 2;
   }
   WriteResponseStatus status = 1;
   string error = 2;
@@ -57,10 +57,9 @@ message ReadRequest {
 
 message ReadResponse {
   enum ReadResponseStatus {
-    UNSPECIFIED = 0;
-    SUCCESS = 1;
-    ERROR = 2;
-    EOF = 3;
+    READ_RESPONSE_STATUS_UNSPECIFIED = 0;
+    READ_RESPONSE_STATUS_SUCCESS = 1;
+    READ_RESPONSE_STATUS_ERROR = 2;
   }
   ReadResponseStatus status = 1;
   string error = 2;
@@ -74,10 +73,10 @@ message InfoRequest {
 
 message InfoResponse {
   enum InfoResponseStatus {
-    UNSPECIFIED = 0;
-    SUCCESS = 1;
-    ERROR = 2;
-    NOT_FOUND = 3;
+    INFO_RESPONSE_STATUS_UNSPECIFIED = 0;
+    INFO_RESPONSE_STATUS_SUCCESS = 1;
+    INFO_RESPONSE_STATUS_ERROR = 2;
+    INFO_RESPONSE_STATUS_NOT_FOUND = 3;
   }
   InfoResponseStatus status = 1;
   string error = 2;
@@ -91,10 +90,10 @@ message DeleteRequest {
 
 message DeleteResponse {
   enum DeleteResponseStatus {
-    UNSPECIFIED = 0;
-    SUCCESS = 1;
-    ERROR = 2;
-    NOT_FOUND = 3;
+    DELETE_RESPONSE_STATUS_UNSPECIFIED = 0;
+    DELETE_RESPONSE_STATUS_SUCCESS = 1;
+    DELETE_RESPONSE_STATUS_ERROR = 2;
+    DELETE_RESPONSE_STATUS_NOT_FOUND = 3;
   }
   DeleteResponseStatus status = 1;
   string error = 2;
